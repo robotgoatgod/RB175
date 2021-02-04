@@ -26,20 +26,31 @@ def parse_pathquery(pathquery)
   [path, query_string]
 end
 
-server = TCPServer.new("localhost", 3011)
+def parse_dice(parameters)
+  rolls = parameters.has_key?("rolls") ? parameters["rolls"] : 1
+  sides = parameters.has_key?("sides") ? parameters["sides"] : 6
+  [rolls.to_i, sides.to_i]
+end
+
+server = TCPServer.new("localhost", 3012)
 loop do
   client = server.accept
 
   request_line = client.gets
+
   next if !request_line || request_line =~ /favicon/
   http_method, path, parameters, protocol = parse_request(request_line)
   
   client.puts "HTTP/1.1 200 OK\r\n\r\n"
-  client.puts request_line  
-  client.puts rand(6) + 1
+  client.puts request_line
+
+  dice_rolls, dice_sides = parse_dice(parameters)
+  dice_rolls.times do |time|
+    client.puts "Rolling dice for #{time + 1} time!"
+    client.puts "Dice rolls on: #{rand(dice_sides + 1)}!"
+  end
+  
   client.close  
 end
 
-def parse_dice(parameters)
-  # implementation
-end
+
