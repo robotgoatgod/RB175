@@ -2,8 +2,8 @@ require "socket"
 
 def parse_request(request_line)  
   http_method, path_query, protocol = request_line.split  
-  path, query_string = parse_pathquery(path_query)
-  param_hash = parse_querystring(query_string)
+  path, query_string = parse_pathquery((path_query || ""))
+  param_hash = parse_querystring(query_string || "")
   [http_method, path, param_hash, protocol]
 end
 
@@ -23,13 +23,7 @@ def parse_pathquery(pathquery)
   [path, query_string]
 end
 
-def parse_dice(parameters)
-  rolls = parameters.has_key?("rolls") ? parameters["rolls"] : 1
-  sides = parameters.has_key?("sides") ? parameters["sides"] : 6
-  [rolls.to_i, sides.to_i]
-end
-
-server = TCPServer.new("localhost", 3014)
+server = TCPServer.new("localhost", 3017)
 loop do
   client = server.accept
   request_line = client.gets
@@ -48,13 +42,13 @@ loop do
   client.puts parameters
   client.puts "</pre>"
 
+  client.puts "<h1>Counter</h1>"
+  number = parameters["number"].to_i rescue 1
+  client.puts "<p>The current number is: #{number}.</p>"
+  client.puts "<a href=?number=#{number + 1}>Add!</a>"
+  client.puts "<a href=?number=#{number - 1}>Subtract!</a>"
 
-  puts "<h1>Rolls!</h1>"
-  dice_rolls, dice_sides = parse_dice(parameters)
-  dice_rolls.times do |time|
-    client.puts "<h4>Rolling dice for #{time + 1} time!</h4>"
-    client.puts "<p>Dice rolls on: #{rand(dice_sides + 1)}!</p>"
-  end
+ 
   client.puts "</body>"
   client.puts "</html>"
   
