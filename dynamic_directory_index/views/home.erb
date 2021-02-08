@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @title %></title>
+
+  <body>
+    <div id="layout">
+      <ul>
+        <% @files.each do |file| %>
+        <li><a href="<%= file %>"> <%= file %></a></li>
+        <% end %>
+      </ul>
+      <br></br>
+      <b>Order:</b> <%= @order %>
+      <li><a href="/?order=ascending">Sort ascending</a></li>
+      <li><a href="/?order=descending">Sort descending</a></li>
+    </div>
+  </body>
+</html>
