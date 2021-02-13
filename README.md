@@ -19,5 +19,5 @@ Files from RB175 - Networked Applications
   * redirecting
   * adding a search form
   
-* ...
+* Code Challenge: Users and Interests app
  
