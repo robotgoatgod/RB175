@@ -10,14 +10,29 @@ def each_chapter
   end
 end
 
+def paragraphs_matching(chapter, query)
+  results = {}
+  
+  chapter.split("\n\n").each_with_index do |paragraph, p_id|
+    results[p_id] = paragraph if paragraph.include?(query)
+  end
+
+  results
+end
+
+
+=begin
+- iterate through @ results -> {name: name (used for displaying), number: number (used for links), paragraphs: { p_id => paragraph}}
+- 
+=end
 def chapters_matching(query)
   results = []
 
   return results if !query || query.empty?
 
   each_chapter do |number, name, contents|
-    if contents.include?(query)
-      results.push({name: name, number: number })
+    if contents.include?(query)      
+      results.push({name: name, number: number, paragraphs: paragraphs_matching(contents, query) })
     end    
   end
 
@@ -57,23 +72,13 @@ end
 
 helpers do
   def in_paragraphs(text)
-    text.split("\n\n").map do |paragraph|
-      "<p>#{paragraph}</p>"
+    text.split("\n\n").map.with_index do |paragraph, idx|
+      "<p id=\"paragraph_#{idx}\">#{paragraph}</p>"
     end.join    
   end
 
-  def display_search_results(results, keyword)
-    return "<h4>Type in a keyword</h4>" if keyword.nil?
-    return "<h4>Sorry, no match for '#{keyword}'</h4>" if results.empty?
-
-    display = []    
-    display << "<h4>Results for '#{keyword}'\n</h4>"
-      
-    results.each do |number, name|
-      display << "<li><a href=\"chapters/#{number}\">#{name}</a></li>"
-    end
-    
-    display.join("\n")
+  def highlight_results(paragraph, query)
+    paragraph.gsub(query, "<strong>#{query}</strong>")
   end
 end
 

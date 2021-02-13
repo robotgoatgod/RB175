@@ -11,10 +11,18 @@
 
   <% else %>
     <h2 class="content-subhead"> Results for '<%= params[:query] %>'</h2>
-    
+
     <ul>
       <% @results.each do |result| %>
-        <li><a href="chapters/<%= result[:number] %>"><%= result[:name] %></a></li>
+        <li><h3><%= result[:name] %></h3></li>
+
+        <ul>
+        <% result[:paragraphs].each do |p_num, paragraph| %>        
+          <li><a href="/chapters/<%= result[:number] + 1%>#paragraph_<%= p_num %>"><%= highlight_results(paragraph, params[:query]) %></a></li>
+        <% end %>
+        </ul>
+        
+        
       <% end %>
     </ul>
   <% end %>
@@ -22,3 +30,4 @@
 <% else %>
   <p>Please enter a keyword</p>
 <% end %>
+
