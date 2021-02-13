@@ -1,0 +1,5 @@
+<h1><%= @name %> </h1>
+<p>email: <%= @user_data[:email] %> </p>
+<p>interests: <%= @user_data[:interests].join(', ') %></p>
+<h5>Other Users:</h5>
+<p><%= display_other_user_links(@data, @name) %></p>
