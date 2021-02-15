@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
    <meta charset="utf-8">
@@ -8,6 +7,6 @@
 </head>
 <body>
   <%= yield %>  
-  <p>There are <%= user_count(@data) %> users with a total of <%= interest_count(@data) %> interests.</p>  
+  <p>There are <%= @data.keys.length %> users with a total of <%= count_interests(@data) %> interests.</p>  
 </body>
 </html>
